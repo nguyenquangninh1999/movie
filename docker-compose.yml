@@ -1,0 +1,48 @@
+version: "3.7"
+
+services:
+    nginx:
+        image: nginx:alpine
+        container_name: nginx-matching
+        ports:
+            - "8000:80"
+        volumes:
+            - ./:/var/www/html
+            - ./docker/nginx:/etc/nginx/conf.d/
+        networks:
+            - backend
+
+
+    app:
+        build:
+            context: ./docker/phpfpm
+        image: php-app-matching
+        container_name: php-app-matching
+        working_dir: /var/www/html/
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - backend
+
+
+    db:
+        platform: linux/x86_64
+        image: mysql:8.0
+        container_name: mysql-matching
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'false'
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_DATABASE: ${DB_DATABASE}
+        volumes:
+            - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+        networks:
+            - backend
+
+
+networks:
+    backend:
+        driver: bridge
