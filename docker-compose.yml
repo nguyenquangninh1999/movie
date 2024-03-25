@@ -3,7 +3,7 @@ version: "3.7"
 services:
     nginx:
         image: nginx:alpine
-        container_name: nginx-matching
+        container_name: nginx-movie
         ports:
             - "8000:80"
         volumes:
@@ -16,8 +16,8 @@ services:
     app:
         build:
             context: ./docker/phpfpm
-        image: php-app-matching
-        container_name: php-app-matching
+        image: php-app-movie
+        container_name: php-app-movie
         working_dir: /var/www/html/
         volumes:
             - ./:/var/www/html
@@ -28,7 +28,7 @@ services:
     db:
         platform: linux/x86_64
         image: mysql:8.0
-        container_name: mysql-matching
+        container_name: mysql-movie
         ports:
             - "3306:3306"
         environment:
