@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
-            $table->string('file_name');
+            $table->string('image');
+            $table->string('url_video');
             $table->string('title');
             $table->text('content');
             $table->timestamps();

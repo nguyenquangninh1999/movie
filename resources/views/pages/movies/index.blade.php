@@ -25,10 +25,15 @@
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                         ID</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                        Image</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                         Title</th>
                                     <th
                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Content</th>
+                                    <th
+                                        class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -38,10 +43,25 @@
                                             <p class="text-xs font-weight-bold mb-0">{{ $movie->id }}</p>
                                         </td>
                                         <td>
+                                            <img src="{{ \Illuminate\Support\Facades\Storage::url($movie->image) }}" class="avatar me-3" alt="image">
+
+                                        </td>
+                                        <td>
                                             <p class="text-xs font-weight-bold mb-0">{{ $movie->title }}</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             <p class="text-xs font-weight-bold mb-0">{{ $movie->content }}</p>
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            <div class="d-flex px-3 py-1 justify-content-center align-items-center">
+                                                <a class="btn btn-link text-dark mb-0" href="#"><i class="fa fa-edit"></i></a>
+                                                <form method="post" action="{{ route('movies.destroy', $movie->id) }}">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    <button class="btn btn-link text-dark px-3 mb-0" href="javascript:;"><i
+                                                            class="fas fa-trash-alt text-danger me-2" aria-hidden="true"></i></button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

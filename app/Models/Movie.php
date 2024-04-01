@@ -12,8 +12,9 @@ class Movie extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'file_name',
+        'image',
         'title',
         'content',
+        'url_video'
     ];
 }

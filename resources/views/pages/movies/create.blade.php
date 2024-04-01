@@ -18,8 +18,14 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">Image</label>
+                                        <input class="form-control" type="file" name="file" value="{{ old('file') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">URL Video</label>
-                                        <input class="form-control" type="text" name="file_name" value="{{ old('file_name') }}">
+                                        <input class="form-control" type="text" name="url_video" value="{{ old('url_video') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
