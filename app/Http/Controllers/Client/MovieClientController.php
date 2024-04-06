@@ -13,4 +13,11 @@ class MovieClientController extends Controller
 
         return view("client.index", compact('movies'));
     }
+
+    public function show(string $id)
+    {
+        $movie = Movie::query()->findOrFail($id);
+
+        return view("client.show", compact('movie'));
+    }
 }
