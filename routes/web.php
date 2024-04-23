@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
     Route::group(['middleware' => 'auth'], function () {
         Route::resource('/movies', MovieController::class);
+        Route::resource('/categories', CategoryController::class);
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
     });
 });
