@@ -29,6 +29,7 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\Client\MovieClientController;
 
 Route::get('/', [MovieClientController::class, 'index'])->name('client.index');
+Route::get('/chat', [MovieClientController::class, 'chat'])->name('client.chat');
 Route::get('/{id}', [MovieClientController::class, 'show'])->name('client.show');
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');

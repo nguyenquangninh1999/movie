@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Movie extends Model
 {
@@ -15,6 +16,12 @@ class Movie extends Model
         'image',
         'title',
         'content',
-        'url_video'
+        'url_video',
+        'number_view',
     ];
+
+    public function movieCategories(): HasMany
+    {
+        return $this->hasMany(MovieCategory::class);
+    }
 }

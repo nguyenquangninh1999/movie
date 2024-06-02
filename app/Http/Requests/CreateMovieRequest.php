@@ -26,6 +26,8 @@ class CreateMovieRequest extends FormRequest
             'content' => 'required|string',
             'url_video' => 'required|string',
             'file' => 'required|image',
+            'category_ids' => 'required|array',
+            'number_view' => 'nullable|integer'
         ];
     }
 }

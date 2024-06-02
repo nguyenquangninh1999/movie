@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('url_video');
             $table->string('title');
             $table->text('content');
+            $table->integer('number_view')->default(0);
             $table->timestamps();
         });
     }

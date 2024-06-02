@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateMovieRequest;
+use App\Models\Category;
 use App\Models\Movie;
+use App\Models\MovieCategory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -11,19 +13,23 @@ class MovieController extends Controller
 {
     public function index()
     {
-        $movies = Movie::query()->get();
+        $movies = Movie::query()
+            ->with(['movieCategories'])
+            ->orderByDesc('id')
+            ->get();
 
         return view("pages.movies.index", compact('movies'));
     }
 
     public function create()
     {
-        return view("pages.movies.create");
+        $categories = Category::query()->get();
+
+        return view("pages.movies.create", compact('categories'));
     }
 
     public function store(CreateMovieRequest $request)
     {
-
         $dataInfo = $this->getFileInfo($request->file('file'));
         $dataInfo['path'] = '';
         $dataInfo['name'] = $this->getFileName($request->file('file'), '') . '_' . Str::orderedUuid();
@@ -36,12 +42,24 @@ class MovieController extends Controller
 
         Storage::put($filePath, $fileContent);
 
-        Movie::query()->create([
+        $movie = Movie::query()->create([
             'image' => $filePath,
             'url_video' => $request->input('url_video'),
             'title' => $request->input('title'),
-            'content' => $request->input('content')
+            'content' => $request->input('content'),
+            'number_view' => $request->input('number_view'),
         ]);
+
+        $dataCategory = [];
+        foreach ($request->input('category_ids') as $category) {
+            $dataCategory[] = [
+                'movie_id' => $movie->id,
+                'category_id' => $category,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+        MovieCategory::query()->insert($dataCategory);
 
         return redirect()->route('movies.index');
     }
