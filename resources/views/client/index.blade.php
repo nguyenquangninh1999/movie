@@ -20,7 +20,8 @@
                         @foreach($movies as $movie)
                             <div class="col-lg-3 col-md-6 col-sm-6">
                                 <div onclick="redirectShow('{{ $movie->id }}')" id="productItem-{{$movie->id}}" class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="{{ \Illuminate\Support\Facades\Storage::url($movie->image) }}">
+                                    <div class="product__item__pic set-bg" data-setbg="">
+                                        <img style="object-fit: cover; height: 100%;width: 100%;border-radius: 10px" src="{{ \Illuminate\Support\Facades\Storage::url($movie->image) }}">
                                         <div class="view"><i class="fa fa-eye"></i> {{ $movie->number_view }}</div>
                                     </div>
                                     <div class="product__item__text">

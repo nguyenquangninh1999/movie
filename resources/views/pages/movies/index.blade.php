@@ -66,7 +66,7 @@
                                         </td>
                                         <td class="align-middle text-end">
                                             <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                                <a class="btn btn-link text-dark mb-0" href="#"><i class="fa fa-edit"></i></a>
+                                                <a class="btn btn-link text-dark mb-0" href="{{ route('movies.edit', $movie->id) }}"><i class="fa fa-edit"></i></a>
                                                 <form method="post" action="{{ route('movies.destroy', $movie->id) }}">
                                                     @method('DELETE')
                                                     @csrf
@@ -80,6 +80,7 @@
 
                                 </tbody>
                             </table>
+                            {{ $movies->links('layouts.paginate') }}
                         </div>
                     </div>
                 </div>

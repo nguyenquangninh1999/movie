@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Chat;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 
@@ -58,8 +59,28 @@ class MovieClientController extends Controller
         ]);
     }
 
-    public function chat()
+    public function chat(Request $request)
     {
-        return view("client.chat");
+        $search = $request->get('search');
+
+        $chats = Chat::query()
+            ->when($search, function ($q, $search) {
+                $q->where('title', 'like', '%' . $search . '%');
+            })
+            ->orderByDesc('id')
+            ->paginate(20)->withQueryString();
+
+        return view("client.chat-index", [
+            'chats' => $chats,
+        ]);
+    }
+
+    public function chatDetail(string $id)
+    {
+        $chat = Chat::query()->findOrFail($id);
+
+        return view("client.chat-show", [
+            'chat' => $chat,
+        ]);
     }
 }

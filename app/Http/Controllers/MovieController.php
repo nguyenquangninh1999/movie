@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateMovieRequest;
+use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Category;
 use App\Models\Movie;
 use App\Models\MovieCategory;
@@ -16,7 +17,7 @@ class MovieController extends Controller
         $movies = Movie::query()
             ->with(['movieCategories'])
             ->orderByDesc('id')
-            ->get();
+            ->paginate(10);
 
         return view("pages.movies.index", compact('movies'));
     }
@@ -107,5 +108,69 @@ class MovieController extends Controller
 
             return false;
         }
+    }
+
+    public function edit(string $id)
+    {
+        $categories = Category::query()->get();
+        $movie = Movie::query()->with(['movieCategories'])->findOrFail($id);
+
+        $arrayCategories = [];
+        foreach ($movie->movieCategories as $movieCategory) {
+            $arrayCategories[] = $movieCategory->category_id;
+        }
+
+        return view("pages.movies.edit", [
+            'categories' => $categories,
+            'movie' => $movie,
+            'arrayCategories' => $arrayCategories
+        ]);
+    }
+
+    public function update(int $id, UpdateMovieRequest $request)
+    {
+        $movie = Movie::query()->findOrFail($id);
+        $image = $request->file('file');
+
+        $data = [
+            'url_video' => $request->input('url_video'),
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'number_view' => $request->input('number_view'),
+        ];
+
+        if ($image) {
+            $this->deleteFile([$movie->image]);
+
+            $dataInfo = $this->getFileInfo($request->file('file'));
+            $dataInfo['path'] = '';
+            $dataInfo['name'] = $this->getFileName($request->file('file'), '') . '_' . Str::orderedUuid();
+            $filePath = sprintf('%s/%s', $dataInfo['path'], $dataInfo['name']);
+
+            $fileContent = file_get_contents($request->file('file'));
+            if (!$fileContent) {
+                abort(404);
+            }
+
+            Storage::put($filePath, $fileContent);
+
+            $data['image'] = $filePath;
+        }
+
+        MovieCategory::query()->where('movie_id', $id)->delete();
+        $dataCategory = [];
+        foreach ($request->input('category_ids') as $category) {
+            $dataCategory[] = [
+                'movie_id' => $movie->id,
+                'category_id' => $category,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+        MovieCategory::query()->insert($dataCategory);
+
+        $movie->update($data);
+
+        return redirect()->route('movies.index');
     }
 }

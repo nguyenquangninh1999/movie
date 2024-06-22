@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,7 @@ use App\Http\Controllers\Client\MovieClientController;
 
 Route::get('/', [MovieClientController::class, 'index'])->name('client.index');
 Route::get('/chat', [MovieClientController::class, 'chat'])->name('client.chat');
+Route::get('/chat/{id}', [MovieClientController::class, 'chatDetail'])->name('client.chat-detail');
 Route::get('/{id}', [MovieClientController::class, 'show'])->name('client.show');
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
@@ -39,6 +41,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::resource('/movies', MovieController::class);
         Route::resource('/categories', CategoryController::class);
+        Route::resource('/chats', ChatController::class);
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
     });
 });
